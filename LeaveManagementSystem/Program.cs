@@ -1,11 +1,6 @@
-using LeaveManagementSystem.Services.Email;
-using LeaveManagementSystem.Services.LeaveAllocations;
-using LeaveManagementSystem.Services.LeaveRequests;
-using LeaveManagementSystem.Services.LeaveTypes;
-using LeaveManagementSystem.Services.Periods;
-using LeaveManagementSystem.Services.UserManager;
+using LeaveManagementSystem.Application;
 using Microsoft.EntityFrameworkCore;
-using System.Reflection;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,22 +9,27 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+ApplicationServicesRegistration.AddApplicationServices(builder.Services);
 
-builder.Services.AddScoped<ILeaveTypesServices, LeaveTypesServices>();
-builder.Services.AddTransient<ILeaveAllocationsServices, LeaveAllocationsServices>();
-builder.Services.AddScoped<ILeaveRequestService, LeaveRequestService>();
-builder.Services.AddScoped<IPeriodsService, PeriodsService>();
-builder.Services.AddScoped<IUserService, UserService>();
-builder.Services.AddTransient<IEmailSender, EmailSender>();
+builder.Host.UseSerilog((context, configuration) =>
+{
+    configuration.WriteTo.Console()
+        .ReadFrom.Configuration(context.Configuration)
+        .Enrich.FromLogContext();
+});
 
 builder.Services.AddAuthorizationBuilder()
-    .AddPolicy("AdminSupervisorOnly", policy => 
+    .AddPolicy("AdminSupervisorOnly", policy =>
         policy.RequireRole(Roles.Administrator, Roles.Supervisor));
 
 builder.Services.AddHttpContextAccessor();
-builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
-builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
+builder.Services.AddDefaultIdentity<ApplicationUser>(options => {
+    options.SignIn.RequireConfirmedAccount = true;
+    options.Password.RequiredLength = 8;
+    options.Password.RequireNonAlphanumeric = false;
+
+})
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddControllersWithViews();

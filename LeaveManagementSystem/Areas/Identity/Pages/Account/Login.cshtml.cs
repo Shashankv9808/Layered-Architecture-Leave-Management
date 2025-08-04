@@ -2,13 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 #nullable disable
 
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using System.ComponentModel.DataAnnotations;
-
-namespace LeaveManagementSystem.Areas.Identity.Pages.Account
+namespace LeaveManagementSystem.Web.Areas.Identity.Pages.Account
 {
     public class LoginModel : PageModel
     {
@@ -114,14 +108,14 @@ namespace LeaveManagementSystem.Areas.Identity.Pages.Account
                 }
                 if (result.RequiresTwoFactor)
                 {
-                    return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl, RememberMe = Input.RememberMe });
+                    return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl, Input.RememberMe });
                 }
                 if (result.IsLockedOut)
                 {
                     _logger.LogWarning("User account locked out.");
                     return RedirectToPage("./Lockout");
                 }
-                if(result.IsNotAllowed)
+                if (result.IsNotAllowed)
                 {
                     var user = await _userManager.FindByEmailAsync(Input.Email);
                     if (user != null && !user.EmailConfirmed)

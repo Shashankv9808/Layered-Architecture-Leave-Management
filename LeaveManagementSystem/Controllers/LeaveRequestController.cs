@@ -1,10 +1,8 @@
-﻿using LeaveManagementSystem.Models.LeaveRequests;
-using LeaveManagementSystem.Services.LeaveRequests;
-using LeaveManagementSystem.Services.LeaveTypes;
+﻿using LeaveManagementSystem.Application.Services.LeaveRequests;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
-namespace LeaveManagementSystem.Controllers
+namespace LeaveManagementSystem.Web.Controllers
 {
     [Authorize]
     public class LeaveRequestController(ILeaveTypesServices _leaveTypesServices, ILeaveRequestService _leaveRequestService) : Controller

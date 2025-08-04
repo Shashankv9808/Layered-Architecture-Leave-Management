@@ -1,4 +1,9 @@
-﻿global using LeaveManagementSystem.Common;
+﻿global using LeaveManagementSystem.Application.Models.LeaveAllocations;
+global using LeaveManagementSystem.Application.Models.LeaveRequests;
+global using LeaveManagementSystem.Application.Models.LeaveTypes;
+global using LeaveManagementSystem.Application.Services.LeaveAllocations;
+global using LeaveManagementSystem.Application.Services.LeaveTypes;
+global using LeaveManagementSystem.Common.Static;
 global using LeaveManagementSystem.Data;
 global using Microsoft.AspNetCore.Authentication;
 global using Microsoft.AspNetCore.Identity;

@@ -2,10 +2,9 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 #nullable disable
 
-using LeaveManagementSystem.Services.LeaveAllocations;
 using Microsoft.EntityFrameworkCore;
 
-namespace LeaveManagementSystem.Areas.Identity.Pages.Account
+namespace LeaveManagementSystem.Web.Areas.Identity.Pages.Account
 {
     public class RegisterModel : PageModel
     {
@@ -109,7 +108,7 @@ namespace LeaveManagementSystem.Areas.Identity.Pages.Account
             [Required]
             public string RoleName { get; set; }
         }
-        
+
 
         public async Task OnGetAsync(string returnUrl = null)
         {
@@ -139,7 +138,7 @@ namespace LeaveManagementSystem.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User created a new account with password.");
-                    if(Input.RoleName != null)
+                    if (Input.RoleName != null)
                     {
                         var roleExists = await _roleManager.RoleExistsAsync(Input.RoleName);
                         if (roleExists && Input.RoleName == "Supervisor")
@@ -163,7 +162,7 @@ namespace LeaveManagementSystem.Areas.Identity.Pages.Account
                     var callbackUrl = Url.Page(
                         "/Account/ConfirmEmail",
                         pageHandler: null,
-                        values: new { area = "Identity", userId, code, returnUrl},
+                        values: new { area = "Identity", userId, code, returnUrl },
                         protocol: Request.Scheme);
 
                     await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
@@ -171,7 +170,7 @@ namespace LeaveManagementSystem.Areas.Identity.Pages.Account
 
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {
-                        return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl = returnUrl });
+                        return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl });
                     }
                     else
                     {

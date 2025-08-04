@@ -1,0 +1,26 @@
+﻿using LeaveManagementSystem.Application.Services.Email;
+using LeaveManagementSystem.Application.Services.LeaveAllocations;
+using LeaveManagementSystem.Application.Services.LeaveRequests;
+using LeaveManagementSystem.Application.Services.LeaveTypes;
+using LeaveManagementSystem.Application.Services.Periods;
+using LeaveManagementSystem.Application.Services.UserManager;
+using Microsoft.Extensions.DependencyInjection;
+using System.Reflection;
+
+namespace LeaveManagementSystem.Application
+{
+    public static class ApplicationServicesRegistration
+    {
+        public static IServiceCollection AddApplicationServices(this IServiceCollection services)
+        {
+            services.AddAutoMapper(Assembly.GetExecutingAssembly());
+            services.AddScoped<ILeaveTypesServices, LeaveTypesServices>();
+            services.AddTransient<ILeaveAllocationsServices, LeaveAllocationsServices>();
+            services.AddScoped<ILeaveRequestService, LeaveRequestService>();
+            services.AddScoped<IPeriodsService, PeriodsService>();
+            services.AddScoped<IUserService, UserService>();
+            services.AddTransient<IEmailSender, EmailSender>();
+            return services;
+        }
+    }
+}

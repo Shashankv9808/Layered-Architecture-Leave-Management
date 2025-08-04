@@ -1,7 +1,7 @@
+using LeaveManagementSystem.Application.Models;
 using System.Diagnostics;
-using LeaveManagementSystem.Models;
 
-namespace LeaveManagementSystem.Controllers
+namespace LeaveManagementSystem.Web.Controllers
 {
     public class HomeController : Controller
     {

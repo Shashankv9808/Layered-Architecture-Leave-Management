@@ -1,24 +1,24 @@
-﻿using LeaveManagementSystem.Models.LeaveTypes;
-using LeaveManagementSystem.Services.LeaveTypes;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 
-namespace LeaveManagementSystem.Controllers
+namespace LeaveManagementSystem.Web.Controllers
 {
     [Authorize(Roles = Roles.Administrator)]
     public class LeaveTypesController : Controller
     {
         private readonly ILeaveTypesServices _leaveTypesServices;
+        private readonly ILogger<LeaveTypesController> _logger;
 
-        public LeaveTypesController(ILeaveTypesServices leaveTypesServices)
+        public LeaveTypesController(ILeaveTypesServices leaveTypesServices, ILogger<LeaveTypesController> logger)
         {
             _leaveTypesServices = leaveTypesServices;
+            _logger = logger ?? throw new ArgumentNullException(nameof(_logger));
         }
 
         // GET: LeaveTypes
         public async Task<IActionResult> Index()
         {
-
+            _logger.LogInformation("Fetching all leave types");
             return View(await _leaveTypesServices.GetAllAsync());
         }
 
@@ -56,9 +56,11 @@ namespace LeaveManagementSystem.Controllers
             }
             if (ModelState.IsValid)
             {
+                
                 await _leaveTypesServices.Create(leaveTypeVM);
                 return RedirectToAction(nameof(Index));
             }
+            _logger.LogWarning("Creating {LeaveTypeName} failed.", leaveTypeVM.Name);
             return View(leaveTypeVM);
         }
 
